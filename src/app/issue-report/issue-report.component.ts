@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IssuesService } from '../issues.service';
 import { Issue } from '../issue';
 
@@ -23,13 +23,17 @@ export class IssueReportComponent {
   constructor(private issueService: IssuesService){}
 
   issueForm = new FormGroup<IssueForm>({
-    title: new FormControl('', { nonNullable: true }),
-    description: new FormControl('', { nonNullable: true }),
-    priority: new FormControl('', { nonNullable: true }),
-    type: new FormControl('', { nonNullable: true })
+    title: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(5)] }),
+    description: new FormControl('', { nonNullable: true}),
+    priority: new FormControl('', { nonNullable: true, validators: Validators.required }),
+    type: new FormControl('', { nonNullable: true, validators: Validators.required })
   })
 
   addIssue() {
+    if(this.issueForm && this.issueForm.invalid) {
+      this.issueForm.markAllAsTouched(); // dopiero przy dodawaniu błędu zaznaczamy kontrolki jako invalid
+      return;
+    }
     this.issueService.createIssue(this.issueForm.getRawValue() as Issue);
     this.formClose.emit();
   }
