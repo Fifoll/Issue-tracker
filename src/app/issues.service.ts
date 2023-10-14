@@ -29,4 +29,11 @@ export class IssuesService {
     this.issues[index] = selectedIssue; // replace original issue with issue with completed value
   }
 
+  getSuggestions(title: string): Issue[] {
+    if(title.length > 3) {
+      return this.issues.filter(issue => issue.title.toLowerCase().indexOf(title.toLowerCase()) !== -1);
+    }
+    return [];
+  }
+
 }
