@@ -20,6 +20,13 @@ export class IssuesService {
     this.issues.push(issue);
   }
 
+  updateIssue(issue: Issue, issueNo: number) {
+    console.log(issue);
+    const index = this.issues.findIndex(i => i.issueNo === issueNo);
+    issue.issueNo = issueNo;
+    this.issues[index] = issue;
+  }
+
   completeIssue(issue: Issue) {
     const selectedIssue: Issue = { // create a copy of actual issue
       ...issue, // get full object

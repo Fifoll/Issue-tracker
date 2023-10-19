@@ -15,14 +15,22 @@ export class IssueListComponent implements OnInit {
 
   selectedIssue: Issue | null = null;
 
+  updatedIssue: Issue | null = null;
+
   constructor(private issueService: IssuesService) { }
 
   ngOnInit(): void {
     this.getIssues();
   }
 
+  openForm(issue: Issue) {
+    this.updatedIssue = issue;
+    this.showReportIssue = true;
+  }
+
   onCloseReport() {
     this.showReportIssue = false;
+    this.updatedIssue = null;
     this.getIssues();
   }
 

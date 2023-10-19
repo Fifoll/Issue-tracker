@@ -9,6 +9,7 @@
                 <clr-dg-row *clrDgItems="let issue of issues">
                     <clr-dg-action-overflow>
                         <button class="action-item" (click)="selectedIssue = issue">Resolve</button>
+                        <button class="action-item" (click)="openForm(issue)">Update</button>
                     </clr-dg-action-overflow>
                     <clr-dg-cell>{{issue.issueNo}}</clr-dg-cell>
                     <clr-dg-cell>{{issue.type}}</clr-dg-cell>
@@ -23,6 +24,6 @@
     </clr-datagrid>
 </ng-container>
 
-<app-issue-report *ngIf="showReportIssue === true" (formClose)="onCloseReport()"></app-issue-report>
+<app-issue-report *ngIf="showReportIssue === true" [updatedIssue]="updatedIssue"  (formClose)="onCloseReport()"></app-issue-report>
 
 <app-confirm-dialog *ngIf="selectedIssue" [issueNo]="selectedIssue.issueNo" (confirm)="onConfirm($event)"></app-confirm-dialog> <!-- $event pass true or false from confirm-dialog Output -->

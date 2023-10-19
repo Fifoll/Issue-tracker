@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IssuesService } from '../issues.service';
 import { Issue } from '../issue';
@@ -18,6 +18,7 @@ interface IssueForm {
 
 export class IssueReportComponent implements OnInit {
 
+  @Input() updatedIssue: Issue | null = null;
   @Output() formClose = new EventEmitter();
 
   suggestions: Issue[] = [];
@@ -28,6 +29,14 @@ export class IssueReportComponent implements OnInit {
     this.issueForm.controls.title.valueChanges.subscribe(title => {
       this.suggestions = this.issueService.getSuggestions(title);
     })
+    if(this.updatedIssue) {
+      this.issueForm.setValue({
+        title: this.updatedIssue.title,
+        description: this.updatedIssue.description,
+        priority: this.updatedIssue.priority,
+        type: this.updatedIssue.type
+      })
+    }
   }
 
   issueForm = new FormGroup<IssueForm>({
@@ -37,12 +46,17 @@ export class IssueReportComponent implements OnInit {
     type: new FormControl('', { nonNullable: true, validators: Validators.required })
   })
 
-  addIssue() {
+  submitForm() {
     if(this.issueForm && this.issueForm.invalid) {
       this.issueForm.markAllAsTouched(); // dopiero przy dodawaniu błędu zaznaczamy kontrolki jako invalid
       return;
     }
-    this.issueService.createIssue(this.issueForm.getRawValue() as Issue);
+    if(this.updatedIssue === null) {
+      this.issueService.createIssue(this.issueForm.getRawValue() as Issue);
+    }
+    else {
+      this.issueService.updateIssue(this.issueForm.getRawValue() as Issue, this.updatedIssue.issueNo); 
+    }
     this.formClose.emit();
   }
 

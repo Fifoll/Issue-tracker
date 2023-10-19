@@ -1,11 +1,12 @@
-<h3>Report an issue</h3>
-<form clrForm *ngIf="issueForm" [formGroup]="issueForm" (ngSubmit)="addIssue()">
+<h3 *ngIf="!updatedIssue">Report an issue</h3>
+<h3 *ngIf="updatedIssue">Update Issue no. {{ updatedIssue.issueNo }} - {{ updatedIssue.title }}</h3>
+<form clrForm *ngIf="issueForm" [formGroup]="issueForm" (ngSubmit)="submitForm()">
     <clr-input-container>
         <label>Title</label>
         <input clrInput formControlName="title" />
         <clr-control-error>Title is required, min length is 5 characters</clr-control-error>
     </clr-input-container>
-    <div class="clr-row" *ngIf="suggestions.length">
+    <div class="clr-row" *ngIf="suggestions.length && !updatedIssue">
         <div class="clr-col-lg-2"></div>
         <div class="clr-col-lg-6">
             <clr-stack-view>
@@ -43,6 +44,7 @@
         </select>
         <clr-control-error>Type is required</clr-control-error>
     </clr-select-container>
-    <button class="btn btn-primary" type="submit">Create</button>
+    <button *ngIf="!updatedIssue" class="btn btn-success" type="submit">Create</button>
+    <button *ngIf="updatedIssue" class="btn btn-primary" type="submit">Update</button>
     <button class="btn" type="button" (click)="formClose.emit()">Cancel</button>
 </form>
